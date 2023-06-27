@@ -7,6 +7,10 @@ const itemSchema = new mongoose.Schema({
         trim: true,
         maxlength: [50,'Item name is more than 50!']
     },
+    id: {
+      type: Number,
+      unique: true,
+    },
     description: {
         type: String,
         trim: true,
@@ -21,7 +25,7 @@ const itemSchema = new mongoose.Schema({
         type: Date,
         required: [true, "please insert created_date!"],
     },
-    Status: {
+    status: {
         type: String,
         required: [true, "please insert status"]
     },

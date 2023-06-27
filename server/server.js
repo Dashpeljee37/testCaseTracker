@@ -9,6 +9,7 @@ const morgan = require ('morgan')
 const itemRoute = require('./routes/items')
 const projectRoute = require('./routes/project')
 const connectDB = require("./config/db")
+const errorHandler = require("./middleware/error")
 
 dotenv.config({path: './config/config.env'})
 
@@ -28,6 +29,7 @@ app.use(logger)
 app.use(morgan('combined',{stream: accessLogStream}))
 app.use('/api/v1',projectRoute)
 app.use('/api/v1/item',itemRoute)
+app.use(errorHandler)
 
 const server = app.listen(
   process.env.PORT, () => {
