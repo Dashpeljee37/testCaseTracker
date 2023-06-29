@@ -1,43 +1,36 @@
 const Item = require("../models/Item")
+const MyError = require("../utils/myError")
+const asyncHandler = require("../middleware/asyncHandler")
 
-exports.getItem = async (req, res, next) => {
-    try{
-        const item = await Item.find({type: req.query.itemType});
-
-        res.status(200).json({
-            success: true,
-            body: item
-        })
+exports.getItem = asyncHandler(async (req, res, next) => {
+    const item = await Item.find({type: req.query.itemType});
+    if (!item){
+        throw new MyError("Ийм item байхгүй байна.", 400)
     }
-    catch (err){
-        next(err)
-    }
-    
-}
 
-exports.updateItem = (req, res, next) => {
+    res.status(200).json({
+        success: true,
+        body: item
+    })
+});
+
+exports.updateItem = asyncHandler((req, res, next) => {
     res.status(200).json({
         success: 'true',
         body: "end item-n info update hiih heseg orj irne"
     })
-}
+})
 
-exports.createItem = async (req, res, next) => {
-    try{
-        console.log(Item.find().sort({id:-1}).limit(1).tree.id)
-        const item = await Item.create(req.body);
+exports.createItem = asyncHandler(async (req, res, next) => {
+    // const item = Item.find().sort({id:-1}).limit(1);
+    // console.log(item)
+    const item = await Item.create(req.body);
 
-        res.status(200).json({
-            success: true,
-            body: item
-        })
-    }
-    catch (err){
-        next(err)
-    }
-    
-    
-}
+    res.status(200).json({
+        success: true,
+        body: item
+    });
+});
 
 exports.deleteItem = (req, res, next) => {
     res.status(200).json({

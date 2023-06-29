@@ -1,4 +1,5 @@
 const mongoose = require("mongoose")
+const { transliterate, slugify } = require('transliteration');
 
 const itemSchema = new mongoose.Schema({
     name: {
@@ -11,6 +12,7 @@ const itemSchema = new mongoose.Schema({
       type: Number,
       unique: true,
     },
+    slug: String,
     description: {
         type: String,
         trim: true,
@@ -21,7 +23,7 @@ const itemSchema = new mongoose.Schema({
         required: [true, "please insert item type!"],
         trim: true,    
     },
-    created_date: {
+    createdAt: {
         type: Date,
         required: [true, "please insert created_date!"],
     },
@@ -36,17 +38,21 @@ const itemSchema = new mongoose.Schema({
     tags: {
       type: Array,
     },
-    expected_result: {
+    expectedResult: {
       type: String,
+      maxlength: [500, 'item description is more than 500!']
     },
-    total_comment: {
-      type: Number,
-    },
-    tested_date: {
-      type: String,
-    }
+    totalComment: Number,
+    testedDate: Date,
+    parentId: Number,
+    versionId: String,
   }
 )
+
+itemSchema.pre("save", function (next){
+  this.slug = slugify(this.name)
+  next()
+})
 
 
 module.exports = mongoose.model("Items", itemSchema);
