@@ -10,7 +10,7 @@ const itemSchema = new mongoose.Schema({
     },
     id: {
       type: Number,
-      unique: true,
+      unique: [true,"id хоосон байж болохгүй."],
     },
     slug: String,
     description: {

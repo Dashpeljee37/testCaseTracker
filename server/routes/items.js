@@ -10,7 +10,7 @@ const {
 const router = express.Router();
 
 router
-  .route("/")
+  .route("/:id")
   .get(getItem)
   .post(createItem)
   .put(updateItem)

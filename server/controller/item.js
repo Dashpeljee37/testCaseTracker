@@ -3,7 +3,7 @@ const MyError = require("../utils/myError")
 const asyncHandler = require("../middleware/asyncHandler")
 
 exports.getItem = asyncHandler(async (req, res, next) => {
-    const item = await Item.find({type: req.query.itemType});
+    const item = await Item.find({type: req.query.itemType, id: req.params.id});
     if (!item){
         throw new MyError("Ийм item байхгүй байна.", 400)
     }
@@ -14,10 +14,14 @@ exports.getItem = asyncHandler(async (req, res, next) => {
     })
 });
 
-exports.updateItem = asyncHandler((req, res, next) => {
+exports.updateItem = asyncHandler(async (req, res, next) => {
+    const item = await Item.findByIdAndUpdate(req.params.id, req.body, {
+        new: true,
+        runValidators: true,
+    });
     res.status(200).json({
         success: 'true',
-        body: "end item-n info update hiih heseg orj irne"
+        body: item
     })
 })
 
@@ -32,16 +36,21 @@ exports.createItem = asyncHandler(async (req, res, next) => {
     });
 });
 
-exports.deleteItem = (req, res, next) => {
+exports.deleteItem = asyncHandler(async (req, res, next) => {
+    const item = await Item.find({type: req.query.itemType, id: req.query.itemId});
+    if (!item){
+        throw new MyError("Ийм item байхгүй байна.", 400)
+    }
+    console.log(item[0]._id)
     res.status(200).json({
-        success: 'true',
-        body: "end item-n delete hiih heseg orj irne"
-      })
-}
+        success: true,
+        body: item
+    })
+});
 
-exports.addProgress = (req, res, next) => {
+exports.addProgress = asyncHandler((req, res, next) => {
     res.status(200).json({
         success: 'true',
         body: "end item-d comment nemeh heseg orj irne"
       })
-}
+});
